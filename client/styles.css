@@ -1,0 +1,46 @@
+.Grid{
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    border: solid;
+    height: 768;
+    width: 768;
+    overflow: auto;
+}
+.row{
+    display: flex;
+    flex-direction: column;
+}
+.block {
+    opacity: 1;
+}
+.x64 .block {
+    min-width: 64px;
+    min-height: 64px;
+}
+.x32 .block {
+    min-width: 32px;
+    min-height: 32px;
+}
+.x16 .block {
+    min-width: 16px;
+    min-height: 16px;
+}
+.block_in_Viewport{
+    opacity: 1;
+}
+.block-t-0-0{
+    background-color:gray;
+}
+.block-t-1-0{
+    background-color: green;
+}
+.block-t-2-0{
+    background-color: lightgreen;
+}
+.block-t-3-0{
+    background-color: blue;
+}
+.block-t-4-0{
+    background-color: lightseagreen;
+}

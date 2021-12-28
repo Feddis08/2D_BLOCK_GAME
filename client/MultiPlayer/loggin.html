@@ -1,0 +1,19 @@
+<h1>You are playing MultiPlayer loggin!<h1>
+                <p>Server stats:</p>
+                <p id="server_title">loading...</p>
+                <p id="server_name">loading...</p>
+                <p id="server_max_player">loading...</p>
+                <p id="server_info">loading...</p>
+                <br>
+                <p>Game settings:</p>
+                <label>Enter the scale of one block (16, 32, 64) </label><input id="block_scale" value="64">
+                <br>
+                <label>Enter the renderdistance (in blocks; max 32, min 0) </label><input id="render_distance"
+                        value="12">
+                <br>
+                <lable>Enter your in game name </lable><input type="text" id="player_name" value="player_name"
+                        style="width: 200px;">
+                <br>
+                <button onclick="Server.joinServer()" style="width: 800px; background-color: aqua;">Join server</button>
+                <br><br>
+                <button onclick="goHome()">Go home</button>
