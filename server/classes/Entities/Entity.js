@@ -66,16 +66,16 @@ class Player {
                     };
                 }
                 if (this.move == "ArrowUp") {
-                    this.y++;
+                    this.y--;
                     if (this.check_move(this.x, this.y)) {
-                        this.y--;
+                        this.y++;
                         this.move = "idle";
                     };
                 }
                 if (this.move == "ArrowDown") {
-                    this.y--;
+                    this.y++;
                     if (this.check_move(this.x, this.y)) {
-                        this.y++;
+                        this.y--;
                         this.move = "idle";
                     };
                 }
