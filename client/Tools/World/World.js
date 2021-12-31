@@ -1,4 +1,3 @@
-const Grid = require("./Grid");
 class World {
     entities = [];
     negative_chunks = [];
@@ -11,7 +10,7 @@ class World {
         this.create();
     }
     create() {
-        let grid = new Grid(this.dim)
+        let grid = new World_Grid(this.dim)
         this.chunks = grid.chunks;
         console.log("[Server]: World created!");
     }
@@ -45,4 +44,3 @@ class World {
         }
     }
 }
-module.exports = World;

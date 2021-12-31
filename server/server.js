@@ -1,7 +1,7 @@
 "use strict";
 var express = require("express");
 var app = express();
-var port = 8080;
+var port = 80;
 var socket = require("socket.io");
 const GameServer = require("./classes/modules/GameServer");
 const ConnectPacket = require("./classes/modules/ConnectPacket");
@@ -10,7 +10,7 @@ var server = app.listen(port, function () {
 });
 app.use(express.static("../client"));
 var io = socket(server);
-var gameServer = new GameServer(io, "New World", 128);
+var gameServer = new GameServer(io, "New World", 16);
 var server_info = "this is a dev server";
 var server_max_player = 32;
 var server_name = "test_name";

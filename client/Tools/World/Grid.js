@@ -1,6 +1,4 @@
-const Block = require("./Block");
-const Chunk = require("./Chunk");
-class Grid {
+class World_Grid {
     chunks_dim = 0;
     chunks = [];
     constructor(dim) {
@@ -16,11 +14,8 @@ class Grid {
                 [...Array(8)].forEach((_, xRow) => {
                     let b_collumn = [];
                     [...Array(8)].forEach((_, collumn) => {
-                        let min = Math.ceil(0);
-                        let max = Math.floor(4);
-                        let block = new Block(Math.floor(Math.floor(Math.random() * (max - min + 1)) + min), 0);
+                        let block = new Block(0, 0);
                         b_collumn.push(block);
-
                     })
                     b_row.push(b_collumn);
                 })
@@ -32,4 +27,3 @@ class Grid {
         })
     }
 }
-module.exports = Grid;

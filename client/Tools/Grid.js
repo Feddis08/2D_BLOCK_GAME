@@ -3,6 +3,7 @@ class Grid {
     viewRange = 5
     xPos = 0;
     yPos = 0;
+    chunks = [];
     blocks = [];
     block_px = 32;
     constructor(xPos, yPos, dim, viewRange, SP, blocks) {
@@ -52,28 +53,42 @@ class Grid {
 
     }
     drawGrid() {
-        let oldRowDomNodes = document.querySelectorAll(".row");
-        oldRowDomNodes.forEach((domNodeRow, index) => {
-            domNodeRow.remove();
+        let oldChunkDomNodes = document.querySelectorAll(".chunk");
+        oldChunkDomNodes.forEach((domNodeChunk, index) => {
+            domNodeChunk.remove();
         })
-        let domNodeGrid = document.querySelector("#Grid");
-        this.blocks.forEach((collumn, xRow) => {
-            const domNodeRow = document.createElement("div");
-            domNodeRow.classList.add("row");
-            collumn.forEach((block, y) => {
-                let old_block_domNode = document.querySelector("#block-x" + xRow + "-y" + y);
-                if (old_block_domNode !== null) old_block_domNode.remove();
-                const domNodeBlock = document.createElement("div");
-                domNodeBlock.id = "block-x" + xRow + "-y" + y;
-                domNodeBlock.classList.add("block");
-                domNodeBlock.classList.add("block-t-" + block.block_of + "-" + block.block_type);
-                domNodeRow.appendChild(domNodeBlock);
+        this.chunks.forEach((c_row, c_x) => {
+            const domNodeC_Row = document.createElement("div");
+            domNodeC_Row.classList.add("chunk_row");
+            c_row.forEach((chunk, c_y) => {
+                const domNodeChunk = document.createElement("div");
+                domNodeChunk.classList.add("chunk");
+                domNodeChunk.id = ("chunk-x" + c_x, "-y", c_y);
+                chunk.blocks.forEach((collumn, xRow) => {
+                    const domNodeRow = document.createElement("div");
+                    domNodeRow.classList.add("row");
+                    collumn.forEach((block, y) => {
+                        //let old_block_domNode = document.querySelector("#block-x" + xRow + "-y" + y);
+                        //if (old_block_domNode !== null) old_block_domNode.remove();
+                        const domNodeBlock = document.createElement("div");
+                        //domNodeBlock.id = "block-x" + (xRow + c_y) + "-y" + (y + c_x);
+                        domNodeBlock.id = `chunk-${c_x}-${c_y}-block-${xRow}-${y}`;
+                        domNodeBlock.classList.add("block");
+                        domNodeBlock.classList.add("block-t-" + block.block_of + "-" + block.block_type);
+                        domNodeRow.appendChild(domNodeBlock);
+                    })
+                    domNodeChunk.appendChild(domNodeRow);
+                })
+                domNodeC_Row.appendChild(domNodeChunk);
             })
-            domNodeGrid.appendChild(domNodeRow);
+            const domNodeGrid = document.querySelector("#Grid");
+            domNodeGrid.appendChild(domNodeC_Row);
         })
+
     }
     update() {
         this.drawGrid();
-        this.drawViewport();
+        console.log("eoigrjdkm")
+        //this.drawViewport();
     }
 }

@@ -1,13 +1,14 @@
 
 const Data = require("../modules/Data.js");
 class Player {
+    isPlayer = false;
     UUID = "";
-    x = 50;
-    y = 50;
+    x = 1;
+    y = 1;
     name = "no_name";
     health = 10;
     //step_speed ms in block
-    step_speed = 250;
+    step_speed = 50;
     step_count = 0;
     move = "idle";
     upTime = 0;
@@ -31,21 +32,24 @@ class Player {
         const rand = Math.random().toString();
         this.UUID = "UUID-" + new Date().getTime() + rand.split(".")[1];
     }
-    check_block_collision(x, y) {
-        let block = Data.world.blocks[x][y];
-        return block;
+    putInChunk() {
+
     }
     check_block_for_collision(block) {
-        let result = false;
-        this.collisionTable.forEach((block_type, index) => {
-            if (block.block_type == block_type) {
-                result = true;
-            }
-        })
-        return result;
+        if (block == false) {
+            return false
+        } else {
+            let result = false;
+            this.collisionTable.forEach((block_type, index) => {
+                if (block.block_type == block_type) {
+                    result = true;
+                }
+            })
+            return result;
+        }
     }
     check_move(x, y) {
-        return this.check_block_for_collision(this.check_block_collision(x, y));
+        return this.check_block_for_collision(Data.world.getBlock(x, y));
     }
     moving() {
         if (this.step_count == this.step_speed) {

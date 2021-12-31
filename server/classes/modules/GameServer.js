@@ -5,6 +5,7 @@ const e = require("cors");
 class GameServer {
     entities = [];
     players = [];
+    loadedChunks = [];
     io;
     //tickspeed in ms
     tickSpeed = 10;
@@ -21,12 +22,38 @@ class GameServer {
     gameLoop() {
         this.players.forEach((player, index) => {
             if (player.setup_accepted) {
+                this.add_loaded_chunks_by_player(player);
                 player.tick();
+                this.remove_players_from_all_loaded_chunks();
+                this.add_loaded_chunks_by_player(player)
+                this.loadedChunks = [];
+
                 if (player.viewChange) {
-                    this.io.to(player.socketId).emit("view_update", { viewport: player.blocks_to_see });
+                    this.io.to(player.socketId).emit("view_update", { viewport: player.chunks_to_see });
                     player.viewChange = false;
                 }
             }
+        })
+    };
+    remove_players_from_all_loaded_chunks() {
+        this.loadedChunks.forEach((chunk, index) => {
+            chunk.chunk.entities.forEach((entity, index) => {
+                if (entity.isPlayer) {
+                    chunk.entities.splice(index, 1)
+                }
+            })
+        })
+
+    }
+    add_loaded_chunks_by_player(player) {
+        [...Array(player.viewRange)].forEach((_, row) => {
+            [...Array(player.viewRange)].forEach((_, column) => {
+                let chunk = Data.world.getChunkByBlock((player.x + row), (player.y + column));
+                if (chunk == false) { } else {
+                    this.loadedChunks.push(chunk);
+                }
+            })
+
         })
     };
     addPlayer(player_name, socketId) {

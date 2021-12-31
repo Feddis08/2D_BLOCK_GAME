@@ -50,7 +50,8 @@ let Server = {
             }
         })
         this.socket.on("view_update", (dataPacket) => {
-            this.grid.blocks = dataPacket.viewport;
+            console.log(dataPacket)
+            this.grid.chunks = dataPacket.viewport;
             this.grid.update();
         })
         this.socket.on("disconnect", () => {
@@ -62,8 +63,8 @@ let Server = {
         document.body.innerHTML = loadPage("MultiPlayer/game.html");
         let name_tag = document.querySelector("#name_tag");
         let domNodeGrid = document.querySelector("#Grid");
-        domNodeGrid.style.height = this.block_scale * dataPacket.player.viewRange;
-        domNodeGrid.style.width = this.block_scale * dataPacket.player.viewRange;
+        domNodeGrid.style.height = (this.block_scale * 8) * dataPacket.player.viewRange;
+        domNodeGrid.style.width = (this.block_scale * 8) * dataPacket.player.viewRange;
         name_tag.innerHTML = "Your name: " + dataPacket.player.name;
         blockSize(this.block_scale);
         this.grid = new Grid(0, 0, 0, dataPacket.player.viewRange, false);
