@@ -10,7 +10,7 @@ var server = app.listen(port, function () {
 });
 app.use(express.static("../client"));
 var io = socket(server);
-var gameServer = new GameServer(io, "New World", 16);
+var gameServer = new GameServer(io, "New World", 128);
 var server_info = "this is a dev server";
 var server_max_player = 32;
 var server_name = "test_name";

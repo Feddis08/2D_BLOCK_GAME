@@ -21,12 +21,11 @@ class GameServer {
     };
     gameLoop() {
         this.players.forEach((player, index) => {
+            this.remove_players_from_all_loaded_chunks();
+            this.loadedChunks = [];
             if (player.setup_accepted) {
                 this.add_loaded_chunks_by_player(player);
                 player.tick();
-                this.remove_players_from_all_loaded_chunks();
-                this.add_loaded_chunks_by_player(player)
-                this.loadedChunks = [];
 
                 if (player.viewChange) {
                     this.io.to(player.socketId).emit("view_update", { viewport: player.chunks_to_see });
@@ -37,25 +36,40 @@ class GameServer {
     };
     remove_players_from_all_loaded_chunks() {
         this.loadedChunks.forEach((chunk, index) => {
-            chunk.chunk.entities.forEach((entity, index) => {
-                if (entity.isPlayer) {
-                    chunk.entities.splice(index, 1)
+            chunk.chunk.entitiesUUIDs.forEach((entityUUID, index) => {
+                if (this.getPlayerByUUID(entityUUID).isPlayer) {
+                    chunk.chunk.entitiesUUIDs.splice(index, 1)
                 }
             })
         })
 
     }
     add_loaded_chunks_by_player(player) {
-        [...Array(player.viewRange)].forEach((_, row) => {
-            [...Array(player.viewRange)].forEach((_, column) => {
-                let chunk = Data.world.getChunkByBlock((player.x + row), (player.y + column));
-                if (chunk == false) { } else {
-                    this.loadedChunks.push(chunk);
-                }
-            })
+        let chunk = Data.world.getChunkByBlock(player.x, player.y)
+        if (chunk == false) {
+            return false;
+        } else {
+            chunk.chunk.entitiesUUIDs.push(player.UUID);
+            [...Array(player.viewRange)].forEach((_, row) => {
+                [...Array(player.viewRange)].forEach((_, column) => {
+                    let chunk = Data.world.getChunkByBlock((player.x + row), (player.y + column));
+                    if (chunk == false) { } else {
+                        this.loadedChunks.push(chunk);
+                    }
+                })
 
-        })
+            })
+        }
     };
+    getPlayerByUUID(UUID) {
+        let result = false;
+        this.entities.forEach((entity, index) => {
+            if (entity.UUID == UUID) {
+                result = entity;
+            }
+        })
+        return result;
+    }
     addPlayer(player_name, socketId) {
         let player = new Player(player_name, socketId);
         this.entities.push(player);

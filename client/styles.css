@@ -19,6 +19,11 @@
     display: flex;
     flex-direction: column;
 }
+.player {
+    height: 64px;
+    width: 64px;
+    color: red;
+}
 .block {
     opacity: 1;
 }

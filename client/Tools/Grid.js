@@ -88,7 +88,6 @@ class Grid {
     }
     update() {
         this.drawGrid();
-        console.log("eoigrjdkm")
         //this.drawViewport();
     }
 }

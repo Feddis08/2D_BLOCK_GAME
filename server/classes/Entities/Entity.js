@@ -8,12 +8,12 @@ class Player {
     name = "no_name";
     health = 10;
     //step_speed ms in block
-    step_speed = 50;
+    step_speed = 20;
     step_count = 0;
     move = "idle";
     upTime = 0;
     creationDate = "";
-    //all ids in this array will be blocked for collisions
+    //all block_ids in this array will be blocked for collisions
     collisionTable = [];
     constructor(name) {
         this.name = name;

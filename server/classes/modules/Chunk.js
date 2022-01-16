@@ -1,7 +1,7 @@
 class Chunk {
     blocks = [];
     id = "";
-    entities = [];
+    entitiesUUIDs = [];
     constructor(blocks, id) {
         this.blocks = blocks;
         this.id = id;

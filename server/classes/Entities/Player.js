@@ -7,7 +7,7 @@ class Player extends Entity {
     isPlayer = true;
     viewRange = 32;
     chunks_to_see = [];
-    chonks_string = "";
+    chunks_string = "";
     viewChange = false;
     socketId = "";
     constructor(player_name, socketId) {

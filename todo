@@ -1,0 +1,14 @@
+legend:
+    finished = +;
+    upcoming = -;
+    working = *;
+
+load and unload chunks: +;
+make the player visible: *;
+add a chunk_update: -;
+add a block_update: -;
+add a entity_update: -;
+add more blocks: -;
+add images for blocks: -;
+add items: -;
+add an infinity world generation: -;

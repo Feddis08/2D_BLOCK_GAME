@@ -5,7 +5,7 @@ WorldPainter = {
     type: 2,
     startPainting() {
         document.body.innerHTML = loadPage("./MultiPlayer/World_design.html");
-        this.world = new World("WorldPainter_World", 16);
+        this.world = new World("WorldPainter_World", 128);
         this.grid = new Grid(0, 0, 16, 0, false, {});
         this.grid.chunks = this.world.chunks;
         this.grid.update();
