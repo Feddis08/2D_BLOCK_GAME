@@ -8,7 +8,7 @@ class GameServer {
     loadedChunks = [];
     io;
     //tickspeed in ms
-    tickSpeed = 10;
+    tickSpeed = 1;
     constructor(io, name, dim) {
         this.start(name, dim);
         this.io = io;
@@ -26,9 +26,13 @@ class GameServer {
             if (player.setup_accepted) {
                 this.add_loaded_chunks_by_player(player);
                 player.tick();
-
+                if (player.coords_changed_by_move) {
+                    player.coords_changed_by_move = false;
+                    this.io.to(player.socketId).emit("self_entity_update", { player })
+                }
                 if (player.viewChange) {
                     this.io.to(player.socketId).emit("view_update", { viewport: player.chunks_to_see });
+                    this.io.to(player.socketId).emit("self_entity_update", { player })
                     player.viewChange = false;
                 }
             }

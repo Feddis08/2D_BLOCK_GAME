@@ -57,13 +57,17 @@ class Grid {
         oldChunkDomNodes.forEach((domNodeChunk, index) => {
             domNodeChunk.remove();
         })
+        let oldChunkRowDomNodes = document.querySelectorAll(".chunk_row");
+        oldChunkRowDomNodes.forEach((chunkRow, index) => {
+            chunkRow.remove();
+        })
         this.chunks.forEach((c_row, c_x) => {
             const domNodeC_Row = document.createElement("div");
             domNodeC_Row.classList.add("chunk_row");
             c_row.forEach((chunk, c_y) => {
                 const domNodeChunk = document.createElement("div");
                 domNodeChunk.classList.add("chunk");
-                domNodeChunk.id = ("chunk-x" + c_x, "-y", c_y);
+                domNodeChunk.id = `chunk-${c_x}-${c_y}`;
                 chunk.blocks.forEach((collumn, xRow) => {
                     const domNodeRow = document.createElement("div");
                     domNodeRow.classList.add("row");

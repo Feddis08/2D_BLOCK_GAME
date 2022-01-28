@@ -23,12 +23,12 @@ class World {
         if (c_x < 0 || c_y < 0 || x < 0 || y < 0) {
             return false;
         }
-        if (this.chunks.length <= c_x || this.chunks.length <= c_y && 8 <= x || y <= 8) {
-            return false;
-        } else {
+        if (this.chunks.length > c_x || this.chunks.length > c_y && 8 >= x || y >= 8) {
             let chunk = this.chunks[c_x][c_y];
             let block = chunk.blocks[x][y];
             return block;
+        } else {
+            return false;
         }
     }
     getChunkByBlock(want_x, want_y) {
@@ -37,7 +37,7 @@ class World {
         if (c_x < 0 || c_y < 0) {
             return false;
         }
-        if (this.chunks.length <= c_x || this.chunks.length <= c_y) {
+        if (this.chunks.length < c_x || this.chunks.length < c_y) {
             return false;
         } else {
             let chunk = this.chunks[c_x][c_y];

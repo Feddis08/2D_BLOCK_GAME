@@ -1,7 +1,7 @@
 .Grid{
     display: flex;
     flex-direction: row;
-    position: relative;
+    position: absolute;
     border: solid;
     height: 768;
     width: 768;
@@ -19,12 +19,15 @@
     display: flex;
     flex-direction: column;
 }
-.player {
+.entity {
+    z-index: 100;
+    position: absolute;
     height: 64px;
     width: 64px;
-    color: red;
+    background-color: red;
 }
 .block {
+    z-index: 1;
     opacity: 1;
 }
 .x64 .block {
@@ -48,6 +51,7 @@
 }
 .block-t-0-0{
     background-color:gray;
+    background-image: url("res/stone_block.png");
 }
 .block-t-1-0{
     background-color: green;
