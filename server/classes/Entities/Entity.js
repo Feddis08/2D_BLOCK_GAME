@@ -21,7 +21,7 @@ class Player {
     upTime = 0;
     creationDate = "";
     //all block_ids in this array will be blocked for collisions
-    collisionTable = ["0", "1"];
+    collisionTable = ["3"];
     constructor(name) {
         this.name = name;
         this.creationDate = new Date().getTime();

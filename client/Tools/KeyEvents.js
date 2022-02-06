@@ -8,7 +8,6 @@ document.addEventListener("keydown", (evt) => {
             case "ArrowRight":
             case "ArrowLeft":
                 let packet = new MovePacket(evt.code);
-                console.log(packet)
                 Server.socket.emit("move_request", packet);
                 GameLoop.move = true;
         }
@@ -22,7 +21,6 @@ document.addEventListener("keyup", (evt) => {
         case "ArrowLeft":
             old_key = "idle";
             let packet = new MovePacket("idle");
-            console.log(packet)
             Server.socket.emit("move_request", packet);
     }
 })

@@ -50,22 +50,36 @@ let Server = {
             }
         })
         this.socket.on("view_update", (dataPacket) => {
-            //console.log(dataPacket)
             this.grid.chunks = dataPacket.viewport;
             this.grid.update();
         })
-        this.socket.on("self_entity_update", (dataPacket) => {
+        this.socket.on("self_player_update", (dataPacket) => {
             //dataPacket = player
-            console.log(dataPacket.player)
             let entities = [];
             entities.push(dataPacket.player)
-            display_remove_all_entities();
+            display_remove_entity(dataPacket.player.UUID);
             display_entities(entities);
+            console.log(entities, dataPacket.player)
             GameLoop.player = dataPacket.player;
+        })
+        this.socket.on("entity_move_update", (dataPacket) => {
+            //dataPacket = player
+            let entities = [];
+            entities.push(dataPacket.player)
+            display_remove_entity(dataPacket.player.UUID);
+            display_entities(entities);
+            console.log(entities)
+        })
+        this.socket.on("entities_view_update", (dataPacket) => {
+            display_remove_all_entities();
+            display_entities(dataPacket);
         })
         this.socket.on("disconnect", () => {
             this.socket.close();
             if (this.go_to_disc_page) document.body.innerHTML = loadPage("MultiPlayer/cannot_connect.html"); document.body.style = "background-color: red";
+        })
+        this.socket.on("player_disconnect", (player_UUID) => {
+            display_remove_entity(player_UUID);
         })
     },
     startGame(dataPacket) {

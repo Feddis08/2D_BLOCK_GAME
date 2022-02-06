@@ -5,9 +5,12 @@ class Player extends Entity {
     setup_finished = false;
     setup_accepted = false;
     isPlayer = true;
+    entityViewChange = false;
     viewRange = 32;
     chunks_to_see = [];
     chunks_string = "";
+    entities_to_see = [];
+    entities_string = "";
     viewChange = false;
     socketId = "";
     constructor(player_name, socketId) {
@@ -17,10 +20,16 @@ class Player extends Entity {
     }
     personalTick() {
         this.checkViewport();
+        let entities = this.entities_UUID_string(this.chunks_to_see);
+        this.entities_to_see = entities.s_entities;
+        if (this.entities_string !== entities.result) {
+            this.entityViewChange = true;
+            this.entities_string = entities.result;
+        }
     }
-    chunks_to_string(blocks) {
+    chunks_to_string(chunks) {
         let s_chunks = [];
-        blocks.forEach((row, index) => {
+        chunks.forEach((row, index) => {
             let s_row = row.map(chunk => chunk.id).join("-");
             s_chunks.push(s_row);
         })
@@ -29,6 +38,23 @@ class Player extends Entity {
             result = result + s;
         })
         return result;
+
+    }
+    entities_UUID_string(chunks) {
+        let s_entities = [];
+        chunks.forEach((row, index) => {
+            row.forEach((chunk, index) => {
+                chunk.entitiesUUIDs.forEach((UUID, index) => {
+                    s_entities.push(UUID);
+                })
+            })
+        })
+        let result;
+        s_entities.forEach((s, index) => {
+            result = result + s;
+        })
+        return { s_entities, result };
+
 
     }
     checkViewport() {

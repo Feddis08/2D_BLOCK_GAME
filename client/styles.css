@@ -29,6 +29,9 @@
 .block {
     z-index: 1;
     opacity: 1;
+    background-size:     cover;
+    background-repeat:   no-repeat;
+    background-position: center center;
 }
 .x64 .block {
     min-width: 64px;
@@ -51,10 +54,11 @@
 }
 .block-t-0-0{
     background-color:gray;
-    background-image: url("res/stone_block.png");
+    background-image: url("res/Blocks/stone_block.png");
 }
 .block-t-1-0{
     background-color: green;
+    background-image: url("res/Blocks/grass_block.png");
 }
 .block-t-2-0{
     background-color: lightgreen;

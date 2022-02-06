@@ -21,23 +21,48 @@ class GameServer {
     };
     gameLoop() {
         this.players.forEach((player, index) => {
-            this.remove_players_from_all_loaded_chunks();
-            this.loadedChunks = [];
             if (player.setup_accepted) {
-                this.add_loaded_chunks_by_player(player);
                 player.tick();
                 if (player.coords_changed_by_move) {
                     player.coords_changed_by_move = false;
-                    this.io.to(player.socketId).emit("self_entity_update", { player })
+                    this.io.to(player.socketId).emit("self_player_update", { player })
+                    let chunkData = Data.world.getChunkByBlock(player.x, player.y);
+                    chunkData.chunk.entitiesUUIDs.forEach((UUID, index) => {
+                        if (UUID == player.UUID) { } else {
+                            let other_player = this.getPlayerByUUID(UUID);
+                            //this.io.to(other_player.socketId).emit("entity_move_update", { name: other_player.name, x: other_player.x, y: other_player.y, UUID: other_player.UUID });
+                            this.io.to(other_player.socketId).emit("entity_move_update", { player });
+                        };
+                    })
                 }
                 if (player.viewChange) {
+                    this.remove_player_from_loaded_chunk_by_UUID(player.UUID)
+                    this.add_loaded_chunks_by_player(player);
                     this.io.to(player.socketId).emit("view_update", { viewport: player.chunks_to_see });
                     this.io.to(player.socketId).emit("self_entity_update", { player })
                     player.viewChange = false;
                 }
+                if (player.entityViewChange) {
+                    player.entityViewChange = false;
+                    let entities = [];
+                    player.entities_to_see.forEach((UUID, index) => {
+                        entities.push(this.getPlayerByUUID(UUID));
+                    })
+                    this.io.to(player.socketId).emit("entities_view_update", entities);
+                }
             }
         })
     };
+    remove_player_from_loaded_chunk_by_UUID(UUID) {
+        this.loadedChunks.forEach((chunk, index) => {
+            chunk.chunk.entitiesUUIDs.forEach((chunkUUID, index) => {
+                if (chunkUUID == UUID) {
+                    chunk.chunk.entitiesUUIDs.splice(index, 1)
+                }
+            })
+        })
+
+    }
     remove_players_from_all_loaded_chunks() {
         this.loadedChunks.forEach((chunk, index) => {
             chunk.chunk.entitiesUUIDs.forEach((entityUUID, index) => {
@@ -113,11 +138,12 @@ class GameServer {
         })
     }
     removePLayerBySocketId(socketId) {
-
         this.players.forEach((player, index) => {
             if (player.socketId == socketId) {
                 console.log("[Server:] player disconnected: " + player.name);
                 this.players.splice(index, 1)
+                this.remove_player_from_loaded_chunk_by_UUID(player.UUID);
+                this.io.emit("player_disconnected", player.UUID);
             }
         })
         this.entities.forEach((player, index) => {
