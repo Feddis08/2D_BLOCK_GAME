@@ -1,6 +1,5 @@
 display_entities = (entities) => {
     entities.forEach((entity, index) => {
-        console.log(entity)
         let coords = getChunkByBlock(entity.x, entity.y);
         //const domNodeChunk = document.querySelector("#chunk-" + coords.c_x + "-" + coords.c_y);
         const domNodeChunk = document.querySelector("#chunk-0-0");
@@ -8,6 +7,7 @@ display_entities = (entities) => {
         domNodeChunk.appendChild(domNodeEntity)
         domNodeEntity.classList.add("entity");
         domNodeEntity.id = entity.UUID;
+        domNodeEntity.textContent = entity.name;
         domNodeEntity.style.left = coords.x * 64;
         domNodeEntity.style.top = coords.y * 64;
     })

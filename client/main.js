@@ -59,7 +59,6 @@ let Server = {
             entities.push(dataPacket.player)
             display_remove_entity(dataPacket.player.UUID);
             display_entities(entities);
-            console.log(entities, dataPacket.player)
             GameLoop.player = dataPacket.player;
         })
         this.socket.on("entity_move_update", (dataPacket) => {
@@ -68,7 +67,6 @@ let Server = {
             entities.push(dataPacket.player)
             display_remove_entity(dataPacket.player.UUID);
             display_entities(entities);
-            console.log(entities)
         })
         this.socket.on("entities_view_update", (dataPacket) => {
             display_remove_all_entities();
