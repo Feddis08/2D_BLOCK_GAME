@@ -30,8 +30,7 @@ class GameServer {
                     chunkData.chunk.entitiesUUIDs.forEach((UUID, index) => {
                         if (UUID == player.UUID) { } else {
                             let other_player = this.getPlayerByUUID(UUID);
-                            //this.io.to(other_player.socketId).emit("entity_move_update", { name: other_player.name, x: other_player.x, y: other_player.y, UUID: other_player.UUID });
-                            this.io.to(other_player.socketId).emit("entity_move_update", { player });
+                            this.io.to(other_player.socketId).emit("entity_move_update", { player: player.filter_and_get_public_data() });
                         };
                     })
                 }
@@ -46,7 +45,7 @@ class GameServer {
                     player.entityViewChange = false;
                     let entities = [];
                     player.entities_to_see.forEach((UUID, index) => {
-                        entities.push(this.getPlayerByUUID(UUID));
+                        entities.push(this.getPlayerByUUID(UUID).filter_and_get_public_data());
                     })
                     this.io.to(player.socketId).emit("entities_view_update", entities);
                 }

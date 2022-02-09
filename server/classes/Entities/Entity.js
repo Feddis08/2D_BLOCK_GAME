@@ -22,10 +22,22 @@ class Player {
     creationDate = "";
     //all block_ids in this array will be blocked for collisions
     collisionTable = ["3"];
+    //everything other client should see you need to put it in the list
+    //the own player has access to all
+    public_data_list = [];
     constructor(name) {
+        this.initial(name);
+    }
+    initial(name) {
         this.name = name;
         this.creationDate = new Date().getTime();
         this.getUUID();
+        this.add_public_data("x");
+        this.add_public_data("y");
+        this.add_public_data("UUID");
+        this.add_public_data("chunk_x");
+        this.add_public_data("chunk_y");
+        this.add_public_data("name");
     }
 
     personalTick() {
@@ -40,6 +52,41 @@ class Player {
         this.personalTick();
         this.moving();
         this.check_for_changed_x_y();
+    }
+    add_public_data(data_s) {
+        this.public_data_list.push(data_s);
+    }
+    remove_public_data(data_s) {
+        this.public_data_list.forEach((public_data, index) => {
+            if (public_data == data_s) {
+                this.public_data_list.splice(index, 1);
+            }
+        })
+    }
+    filter_and_get_public_data() {
+        let public_data = {};
+        this.public_data_list.forEach((public_data_s, index) => {
+            //everything other client should see you need to update this
+            if (public_data_s == "x") {
+                public_data.x = this.x;
+            }
+            if (public_data_s == "y") {
+                public_data.y = this.y;
+            }
+            if (public_data_s == "UUID") {
+                public_data.UUID = this.UUID;
+            }
+            if (public_data_s == "chunk_y") {
+                public_data.chunk_y = this.chunk_y;
+            }
+            if (public_data_s == "chunk_x") {
+                public_data.chunk_x = this.chunk_x;
+            }
+            if (public_data_s == "name") {
+                public_data.name = this.name;
+            }
+        })
+        return public_data;
     }
     getUUID() {
         const rand = Math.random().toString();
