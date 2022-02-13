@@ -1,7 +1,7 @@
 
 const { world } = require("../modules/Data.js");
 const Data = require("../modules/Data.js");
-class Player {
+class Entity {
     isPlayer = false;
     UUID = "";
     x = 1;
@@ -183,4 +183,4 @@ class Player {
         }
     }
 }
-module.exports = Player;
+module.exports = Entity;

@@ -29,7 +29,7 @@ class GameServer {
                     let chunkData = Data.world.getChunkByBlock(player.x, player.y);
                     chunkData.chunk.entitiesUUIDs.forEach((UUID, index) => {
                         if (UUID == player.UUID) { } else {
-                            let other_player = this.getPlayerByUUID(UUID);
+                            let other_player = this.getEntityByUUID(UUID);
                             this.io.to(other_player.socketId).emit("entity_move_update", { player: player.filter_and_get_public_data() });
                         };
                     })
@@ -45,13 +45,23 @@ class GameServer {
                     player.entityViewChange = false;
                     let entities = [];
                     player.entities_to_see.forEach((UUID, index) => {
-                        entities.push(this.getPlayerByUUID(UUID).filter_and_get_public_data());
+                        entities.push(this.getEntityByUUID(UUID).filter_and_get_public_data());
                     })
                     this.io.to(player.socketId).emit("entities_view_update", entities);
                 }
             }
         })
     };
+    playerChat(text, socketId) {
+        let player = this.getPLayerBySocketId(socketId);
+        let message = "[" + player.name + "]: " + text;
+        console.log("[PlayerChat]: " + message);
+        this.entities.forEach((player, index) => {
+            if (player.isPlayer) {
+                this.io.to(player.socketId).emit("playerChat", { message });
+            }
+        })
+    }
     remove_player_from_loaded_chunk_by_UUID(UUID) {
         this.loadedChunks.forEach((chunk, index) => {
             chunk.chunk.entitiesUUIDs.forEach((chunkUUID, index) => {
@@ -65,7 +75,7 @@ class GameServer {
     remove_players_from_all_loaded_chunks() {
         this.loadedChunks.forEach((chunk, index) => {
             chunk.chunk.entitiesUUIDs.forEach((entityUUID, index) => {
-                if (this.getPlayerByUUID(entityUUID).isPlayer) {
+                if (this.getEntityByUUID(entityUUID).isPlayer) {
                     chunk.chunk.entitiesUUIDs.splice(index, 1)
                 }
             })
@@ -89,7 +99,7 @@ class GameServer {
             })
         }
     };
-    getPlayerByUUID(UUID) {
+    getEntityByUUID(UUID) {
         let result = false;
         this.entities.forEach((entity, index) => {
             if (entity.UUID == UUID) {
@@ -97,6 +107,16 @@ class GameServer {
             }
         })
         return result;
+    }
+    getPLayerBySocketId(socketId) {
+        let result = false;
+        this.entities.forEach((entity, index) => {
+            if (entity.socketId == socketId) {
+                result = entity;
+            }
+        })
+        return result;
+
     }
     addPlayer(player_name, socketId) {
         let player = new Player(player_name, socketId);
@@ -132,6 +152,7 @@ class GameServer {
             if (player.socketId == socketId) {
                 if (player.setup_finished) {
                     if (dataPacket) player.setup_accepted = true;
+                    this.io.emit("infoChat", { message: "[Server]: " + player.name + " joined the server!" });
                 }
             }
         })
@@ -140,6 +161,7 @@ class GameServer {
         this.players.forEach((player, index) => {
             if (player.socketId == socketId) {
                 console.log("[Server:] player disconnected: " + player.name);
+                this.io.emit("infoChat", { message: "[Server]: " + player.name + " disconnected from the server!" });
                 this.players.splice(index, 1)
                 this.remove_player_from_loaded_chunk_by_UUID(player.UUID);
                 this.io.emit("player_disconnected", player.UUID);

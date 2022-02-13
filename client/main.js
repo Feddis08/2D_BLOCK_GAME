@@ -20,6 +20,12 @@ let Server = {
     initServer() {
 
     },
+    infoChat(text) {
+        this.socket.emit("infoChat", { text })
+    },
+    playerChat(text) {
+        this.socket.emit("playerChat", { text })
+    },
     connectServer() {
         this.serverAddress = document.querySelector("#serverAddress").value;
         this.socket = io.connect(this.serverAddress, { autoConnect: false });
@@ -71,6 +77,18 @@ let Server = {
         this.socket.on("entities_view_update", (dataPacket) => {
             display_remove_all_entities();
             display_entities(dataPacket);
+        })
+        this.socket.on("playerChat", (dataPacket) => {
+            console.log(dataPacket.message);
+            let chatOutput2 = document.querySelector("#chatOutput2");
+            console.log(chatOutput2);
+            chatOutput2.innerHTML = chatOutput2.innerHTML + "<br>" + dataPacket.message;
+        })
+        this.socket.on("infoChat", (dataPacket) => {
+            console.log(dataPacket.message);
+            let chatOutput1 = document.querySelector("#chatOutput1");
+            console.log(chatOutput2);
+            chatOutput1.innerHTML = chatOutput1.innerHTML + "<br>" + dataPacket.message;
         })
         this.socket.on("disconnect", () => {
             this.socket.close();

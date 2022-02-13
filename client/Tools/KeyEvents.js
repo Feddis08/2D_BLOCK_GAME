@@ -1,5 +1,21 @@
 let old_key;
 document.addEventListener("keydown", (evt) => {
+    let chatInput1 = document.querySelector("#chatInput1");
+    let chatInput2 = document.querySelector("#chatInput2");
+    if (evt.code == "Enter") {
+        if (chatInput1 === document.activeElement) {
+            if (chatInput1.value != + "") {
+                Server.infoChat(chatInput1.value);
+                chatInput1.value = "";
+            }
+        }
+        if (chatInput2 === document.activeElement) {
+            if (chatInput2.value != + "") {
+                Server.playerChat(chatInput2.value);
+                chatInput2.value = "";
+            }
+        }
+    };
     if (evt.code !== old_key) {
         old_key = evt.code;
         switch (evt.code) {

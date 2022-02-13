@@ -6,6 +6,13 @@ GameLoop = {
     updateCount: 0,
     loop() {
         this.checkStepInterval();
+        this.autoScroll();
+    },
+    autoScroll() {
+        let chatOutput1 = document.querySelector("#chatOutput1");
+        chatOutput1.scrollTop = chatOutput1.scrollHeight;
+        let chatOutput2 = document.querySelector("#chatOutput2");
+        chatOutput2.scrollTop = chatOutput2.scrollHeight;
     },
     checkStepInterval() {
         if (this.move) this.stepIntervalCount = 0; this.move = false;

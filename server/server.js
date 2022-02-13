@@ -35,6 +35,12 @@ io.on("connection", (stream) => {
     stream.on("setup_accepted", (dataPacket) => {
         gameServer.setup_accepted(dataPacket, socketId);
     })
+    stream.on("infoChat", (dataPacket) => {
+
+    })
+    stream.on("playerChat", (dataPacket) => {
+        gameServer.playerChat(dataPacket.text, socketId);
+    })
     stream.on("disconnect", (socket) => {
         gameServer.removePLayerBySocketId(socketId);
     })

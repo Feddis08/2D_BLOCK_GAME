@@ -1,10 +1,25 @@
 .Grid{
     display: flex;
     flex-direction: row;
-    position: absolute;
-    border: solid;
+    position: relative;
+    border: solid 10px;
     height: 768;
     width: 768;
+    overflow: auto;
+}
+.chatWindow{
+    border: solid 10px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    background-color: black;
+    width: 256;
+    height: 512;
+}
+.chatOutput{
+    background-color: darkgray;
+    width: 256;
+    height: 490;
     overflow: auto;
 }
 .row{
@@ -66,7 +81,12 @@
 }
 .block-t-3-0{
     background-color: blue;
+    background-image: url("res/Blocks/water_block.png");
 }
 .block-t-4-0{
     background-color: lightseagreen;
+}
+.wrapper {
+    display:flex;
+    flex-direction: row;
 }
