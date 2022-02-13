@@ -21,7 +21,7 @@ class Entity {
     upTime = 0;
     creationDate = "";
     //all block_ids in this array will be blocked for collisions
-    collisionTable = ["3"];
+    collisionTable = ["2"];
     //everything other client should see you need to put it in the list
     //the own player has access to all
     public_data_list = [];
@@ -38,6 +38,7 @@ class Entity {
         this.add_public_data("chunk_x");
         this.add_public_data("chunk_y");
         this.add_public_data("name");
+        this.add_public_data("isPlayer");
     }
 
     personalTick() {
@@ -84,6 +85,9 @@ class Entity {
             }
             if (public_data_s == "name") {
                 public_data.name = this.name;
+            }
+            if (public_data_s == "isPlayer") {
+                public_data.isPlayer = this.isPlayer;
             }
         })
         return public_data;

@@ -87,7 +87,6 @@ let Server = {
         this.socket.on("infoChat", (dataPacket) => {
             console.log(dataPacket.message);
             let chatOutput1 = document.querySelector("#chatOutput1");
-            console.log(chatOutput2);
             chatOutput1.innerHTML = chatOutput1.innerHTML + "<br>" + dataPacket.message;
         })
         this.socket.on("disconnect", () => {

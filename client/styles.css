@@ -39,8 +39,9 @@
     position: absolute;
     height: 64px;
     width: 64px;
-    background-color: red;
     overflow: hidden;
+    background-size:     cover;
+    background-repeat:   no-repeat;
 }
 .block {
     z-index: 1;
@@ -77,11 +78,11 @@
     background-image: url("res/Blocks/grass_block.png");
 }
 .block-t-2-0{
-    background-color: lightgreen;
+    background-image: url("res/Blocks/water_block.png");
+    background-color: blue;
 }
 .block-t-3-0{
-    background-color: blue;
-    background-image: url("res/Blocks/water_block.png");
+    background-color: lightgreen;
 }
 .block-t-4-0{
     background-color: lightseagreen;

@@ -8,8 +8,12 @@ display_entities = (entities) => {
         domNodeEntity.classList.add("entity");
         domNodeEntity.id = entity.UUID;
         domNodeEntity.textContent = entity.name;
+        domNodeEntity.style.color = "white";
         domNodeEntity.style.left = coords.x * 64;
         domNodeEntity.style.top = coords.y * 64;
+        if (entity.isPlayer) {
+            domNodeEntity.style.backgroundImage = "url('res/Entities/Player/player_front.png')"
+        }
     })
 }
 getChunkByBlock = (want_x, want_y) => {

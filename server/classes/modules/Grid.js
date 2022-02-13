@@ -17,7 +17,7 @@ class Grid {
                     let b_collumn = [];
                     [...Array(8)].forEach((_, collumn) => {
                         let min = Math.ceil(0);
-                        let max = Math.floor(4);
+                        let max = Math.floor(2);
                         let block = new Block(Math.floor(Math.floor(Math.random() * (max - min + 1)) + min), 0);
                         b_collumn.push(block);
 
