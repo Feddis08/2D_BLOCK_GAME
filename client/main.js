@@ -89,6 +89,10 @@ let Server = {
             let chatOutput1 = document.querySelector("#chatOutput1");
             chatOutput1.innerHTML = chatOutput1.innerHTML + "<br>" + dataPacket.message;
         })
+        this.socket.on("watch_direction", (dataPacket) => {
+            display_remove_entity(dataPacket.player.UUID);
+            display_entities([dataPacket.player]);
+        })
         this.socket.on("disconnect", () => {
             this.socket.close();
             if (this.go_to_disc_page) document.body.innerHTML = loadPage("MultiPlayer/cannot_connect.html"); document.body.style = "background-color: red";

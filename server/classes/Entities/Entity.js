@@ -1,6 +1,8 @@
 
 const { world } = require("../modules/Data.js");
 const Data = require("../modules/Data.js");
+const update_data = require("../modules/update_data.js");
+const Update_data = require("../modules/update_data.js");
 class Entity {
     isPlayer = false;
     UUID = "";
@@ -18,8 +20,10 @@ class Entity {
     step_count = 0;
     move = "idle";
     moved = false;
+    watch_direction = "front";
     upTime = 0;
     creationDate = "";
+    updates = [];
     //all block_ids in this array will be blocked for collisions
     collisionTable = ["2"];
     //everything other client should see you need to put it in the list
@@ -39,6 +43,7 @@ class Entity {
         this.add_public_data("chunk_y");
         this.add_public_data("name");
         this.add_public_data("isPlayer");
+        this.add_public_data("watch_direction");
     }
 
     personalTick() {
@@ -53,7 +58,9 @@ class Entity {
         this.personalTick();
         this.moving();
         this.check_for_changed_x_y();
+        return this.updates;
     }
+
     add_public_data(data_s) {
         this.public_data_list.push(data_s);
     }
@@ -89,6 +96,9 @@ class Entity {
             if (public_data_s == "isPlayer") {
                 public_data.isPlayer = this.isPlayer;
             }
+            if (public_data_s == "watch_direction") {
+                public_data.watch_direction = this.watch_direction;
+            }
         })
         return public_data;
     }
@@ -107,6 +117,47 @@ class Entity {
                 }
             })
             return result;
+        }
+    }
+    add_update(data) {
+        this.updates.push(data);
+    }
+    set_watch_direction(move) {
+        if (move === "ArrowDown") {
+            let watch_direction = "front";
+            if (watch_direction !== this.watch_direction) {
+                this.watch_direction = watch_direction;
+                let data = new update_data(true, "watch_direction");
+                data.player = this.filter_and_get_public_data();
+                this.add_update(data);
+            }
+        }
+        if (move === "ArrowUp") {
+            let watch_direction = "back";
+            if (watch_direction !== this.watch_direction) {
+                this.watch_direction = watch_direction;
+                let data = new update_data(true, "watch_direction");
+                data.player = this.filter_and_get_public_data();
+                this.add_update(data);
+            }
+        }
+        if (move === "ArrowRight") {
+            let watch_direction = "right";
+            if (watch_direction !== this.watch_direction) {
+                this.watch_direction = watch_direction;
+                let data = new update_data(true, "watch_direction");
+                data.player = this.filter_and_get_public_data();
+                this.add_update(data);
+            }
+        }
+        if (move === "ArrowLeft") {
+            let watch_direction = "left";
+            if (watch_direction !== this.watch_direction) {
+                this.watch_direction = watch_direction;
+                let data = new update_data(true, "watch_direction");
+                data.player = this.filter_and_get_public_data();
+                this.add_update(data);
+            }
         }
     }
     check_move(x, y) {

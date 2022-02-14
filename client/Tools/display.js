@@ -12,7 +12,7 @@ display_entities = (entities) => {
         domNodeEntity.style.left = coords.x * 64;
         domNodeEntity.style.top = coords.y * 64;
         if (entity.isPlayer) {
-            domNodeEntity.style.backgroundImage = "url('res/Entities/Player/player_front.png')"
+            domNodeEntity.style.backgroundImage = "url('res/Entities/Player/" + entity.watch_direction + ".png')"
         }
     })
 }

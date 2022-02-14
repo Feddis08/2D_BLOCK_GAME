@@ -22,17 +22,22 @@ class GameServer {
     gameLoop() {
         this.players.forEach((player, index) => {
             if (player.setup_accepted) {
-                player.tick();
+                let player_dataPackets = player.tick();
+                player_dataPackets.forEach((player_dataPacket, index) => {
+                    if (player_dataPacket.in_same_chunk) {
+                        this.send_data_to_all_players_in_the_same_chunk(player, player_dataPacket.emit, player_dataPacket);
+                    }
+                    if (player_dataPacket.privat_message) {
+
+                    }
+                    if (player_dataPacket.broadcast) {
+
+                    }
+                })
+                player.updates = [];
                 if (player.coords_changed_by_move) {
                     player.coords_changed_by_move = false;
-                    this.io.to(player.socketId).emit("self_player_update", { player })
-                    let chunkData = Data.world.getChunkByBlock(player.x, player.y);
-                    chunkData.chunk.entitiesUUIDs.forEach((UUID, index) => {
-                        if (UUID == player.UUID) { } else {
-                            let other_player = this.getEntityByUUID(UUID);
-                            this.io.to(other_player.socketId).emit("entity_move_update", { player: player.filter_and_get_public_data() });
-                        };
-                    })
+                    this.send_data_to_all_players_in_the_same_chunk(player, "entity_move_update", { player: player.filter_and_get_public_data() });
                 }
                 if (player.viewChange) {
                     this.remove_player_from_loaded_chunk_by_UUID(player.UUID)
@@ -52,6 +57,13 @@ class GameServer {
             }
         })
     };
+    send_data_to_all_players_in_the_same_chunk(player, emit, data) {
+        let chunkData = Data.world.getChunkByBlock(player.x, player.y);
+        chunkData.chunk.entitiesUUIDs.forEach((UUID, index) => {
+            let other_player = this.getEntityByUUID(UUID);
+            this.io.to(other_player.socketId).emit(emit, data);
+        })
+    }
     playerChat(text, socketId) {
         let player = this.getPLayerBySocketId(socketId);
         let message = "[" + player.name + "]: " + text;
@@ -181,6 +193,7 @@ class GameServer {
     player_move_set(dataPacket, socketId) {
         this.players.forEach((player, index) => {
             if (player.socketId == socketId) {
+                player.set_watch_direction(dataPacket.move);
                 player.move = dataPacket.move;
             }
         })
