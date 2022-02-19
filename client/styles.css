@@ -82,7 +82,8 @@
     background-color: blue;
 }
 .block-t-3-0{
-    background-color: lightgreen;
+    background-image: url("res/Blocks/sand_block.png");
+    background-color: yellow;
 }
 .block-t-4-0{
     background-color: lightseagreen;
