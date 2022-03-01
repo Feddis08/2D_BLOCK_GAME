@@ -25,6 +25,9 @@ io.on("connection", (stream) => {
     stream.on("join", (dataPacket) => {
         gameServer.addPlayer(dataPacket.player_name, socketId);
     })
+    stream.on("watch_request", (dataPacket) => {
+        gameServer.player_watch_direction_set(dataPacket, socketId);
+    })
     stream.on("move_request", (dataPacket) => {
         gameServer.player_move_set(dataPacket, socketId);
     })

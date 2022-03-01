@@ -43,7 +43,7 @@ const loadPage2 = (href) => {
         })
 
 }
-let Server = {
+var Server = {
     grid: null,
     socket: "",
     serverAddress: "",

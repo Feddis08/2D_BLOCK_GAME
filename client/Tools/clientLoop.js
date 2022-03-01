@@ -6,6 +6,7 @@ GameLoop = {
     updateCount: 0,
     loop() {
         this.checkStepInterval();
+        Server.grid.animate();
     },
     checkStepInterval() {
         if (this.move) this.stepIntervalCount = 0; this.move = false;

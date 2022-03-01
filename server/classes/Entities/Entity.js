@@ -38,6 +38,7 @@ class Entity {
         this.getUUID();
         this.add_public_data("x");
         this.add_public_data("y");
+        this.add_public_data("socketId");
         this.add_public_data("UUID");
         this.add_public_data("chunk_x");
         this.add_public_data("chunk_y");
@@ -81,6 +82,9 @@ class Entity {
             if (public_data_s == "y") {
                 public_data.y = this.y;
             }
+            if (public_data_s == "socketId") {
+                public_data.socketId = this.socketId;
+            }
             if (public_data_s == "UUID") {
                 public_data.UUID = this.UUID;
             }
@@ -122,42 +126,58 @@ class Entity {
     add_update(data) {
         this.updates.push(data);
     }
-    set_watch_direction(move) {
-        if (move === "ArrowDown") {
-            let watch_direction = "front";
-            if (watch_direction !== this.watch_direction) {
-                this.watch_direction = watch_direction;
-                let data = new update_data(true, "watch_direction");
-                data.player = this.filter_and_get_public_data();
-                this.add_update(data);
-            }
+    minus_watch_counter() {
+        let watch_count = 0;
+        let result;
+        if (this.watch_direction == "front") { watch_count = 1; }
+        if (this.watch_direction == "right") { watch_count = 2; }
+        if (this.watch_direction == "back") { watch_count = 3; }
+        if (this.watch_direction == "left") { watch_count = 4; }
+        watch_count -= 1;
+        if (watch_count == 0) { watch_count = 4 }
+        if (watch_count == 1) { result = "front"; }
+        if (watch_count == 2) { result = "right"; }
+        if (watch_count == 3) { result = "back"; }
+        if (watch_count == 4) { result = "left"; }
+        return result;
+    }
+    plus_watch_counter() {
+        let watch_count = 0;
+        let result;
+        if (this.watch_direction == "front") { watch_count = 1; }
+        if (this.watch_direction == "right") { watch_count = 2; }
+        if (this.watch_direction == "back") { watch_count = 3; }
+        if (this.watch_direction == "left") { watch_count = 4; }
+        watch_count += 1;
+        if (watch_count == 5) { watch_count = 1 }
+        if (watch_count == 1) { result = "front"; }
+        if (watch_count == 2) { result = "right"; }
+        if (watch_count == 3) { result = "back"; }
+        if (watch_count == 4) { result = "left"; }
+        return result;
+    }
+    set_watch_direction(watch) {
+        if (watch == "KeyA") { this.watch_direction = this.plus_watch_counter(); }
+        if (watch == "KeyD") { this.watch_direction = this.minus_watch_counter(); }
+        if (this.watch_direction === "back") {
+            let data = new update_data(true, "watch_direction");
+            data.player = this.filter_and_get_public_data();
+            this.add_update(data);
         }
-        if (move === "ArrowUp") {
-            let watch_direction = "back";
-            if (watch_direction !== this.watch_direction) {
-                this.watch_direction = watch_direction;
-                let data = new update_data(true, "watch_direction");
-                data.player = this.filter_and_get_public_data();
-                this.add_update(data);
-            }
+        if (this.watch_direction === "front") {
+            let data = new update_data(true, "watch_direction");
+            data.player = this.filter_and_get_public_data();
+            this.add_update(data);
         }
-        if (move === "ArrowRight") {
-            let watch_direction = "right";
-            if (watch_direction !== this.watch_direction) {
-                this.watch_direction = watch_direction;
-                let data = new update_data(true, "watch_direction");
-                data.player = this.filter_and_get_public_data();
-                this.add_update(data);
-            }
+        if (this.watch_direction === "right") {
+            let data = new update_data(true, "watch_direction");
+            data.player = this.filter_and_get_public_data();
+            this.add_update(data);
         }
-        if (move === "ArrowLeft") {
-            let watch_direction = "left";
-            if (watch_direction !== this.watch_direction) {
-                this.watch_direction = watch_direction;
-                let data = new update_data(true, "watch_direction");
-                data.player = this.filter_and_get_public_data();
-                this.add_update(data);
-            }
+        if (this.watch_direction === "left") {
+            let data = new update_data(true, "watch_direction");
+            data.player = this.filter_and_get_public_data();
+            this.add_update(data);
         }
     }
     check_move(x, y) {
@@ -186,49 +206,195 @@ class Entity {
                 this.step_count = 0;
                 if (this.move == "ArrowRight") {
                     this.setLastMove();
-                    this.x++;
-                    if (this.check_move(this.x, this.y)) {
+                    if (this.watch_direction == "front") {
                         this.x--;
+                        if (this.check_move(this.x, this.y)) {
+                            this.x++;
+                            this.setNewMove();
+                            this.move = "idle";
+                            return;
+                        };
+                        this.isMoving = true;
                         this.setNewMove();
-                        this.move = "idle";
-                        return;
-                    };
-                    this.isMoving = true;
-                    this.setNewMove();
+                    }
+                    if (this.watch_direction == "back") {
+                        this.x++;
+                        if (this.check_move(this.x, this.y)) {
+                            this.x--;
+                            this.setNewMove();
+                            this.move = "idle";
+                            return;
+                        };
+                        this.isMoving = true;
+                        this.setNewMove();
+                    }
+                    if (this.watch_direction == "right") {
+                        this.y++;
+                        if (this.check_move(this.x, this.y)) {
+                            this.y--;
+                            this.setNewMove();
+                            this.move = "idle";
+                            return;
+                        };
+                        this.isMoving = true;
+                        this.setNewMove();
+                    }
+                    if (this.watch_direction == "left") {
+                        this.y--;
+                        if (this.check_move(this.x, this.y)) {
+                            this.y++;
+                            this.setNewMove();
+                            this.move = "idle";
+                            return;
+                        };
+                        this.isMoving = true;
+                        this.setNewMove();
+                    }
                 }
                 if (this.move == "ArrowLeft") {
                     this.setLastMove();
-                    this.x--;
-                    if (this.check_move(this.x, this.y)) {
+                    if (this.watch_direction == "front") {
                         this.x++;
+                        if (this.check_move(this.x, this.y)) {
+                            this.x--;
+                            this.setNewMove();
+                            this.move = "idle";
+                            return;
+                        };
+                        this.isMoving = true;
                         this.setNewMove();
-                        this.move = "idle";
-                        return;
-                    };
+                    }
+                    if (this.watch_direction == "back") {
+                        this.x--;
+                        if (this.check_move(this.x, this.y)) {
+                            this.x++;
+                            this.setNewMove();
+                            this.move = "idle";
+                            return;
+                        };
+                        this.isMoving = true;
+                        this.setNewMove();
+                    }
+                    if (this.watch_direction == "right") {
+                        this.y--;
+                        if (this.check_move(this.x, this.y)) {
+                            this.y++;
+                            this.setNewMove();
+                            this.move = "idle";
+                            return;
+                        };
+                        this.isMoving = true;
+                        this.setNewMove();
+                    }
+                    if (this.watch_direction == "left") {
+                        this.y++;
+                        if (this.check_move(this.x, this.y)) {
+                            this.y--;
+                            this.setNewMove();
+                            this.move = "idle";
+                            return;
+                        };
+                        this.isMoving = true;
+                        this.setNewMove();
+                    }
                     this.isMoving = true;
                     this.setNewMove();
                 }
                 if (this.move == "ArrowUp") {
                     this.setLastMove();
-                    this.y--;
-                    if (this.check_move(this.x, this.y)) {
+                    if (this.watch_direction == "front") {
                         this.y++;
+                        if (this.check_move(this.x, this.y)) {
+                            this.y--;
+                            this.setNewMove();
+                            this.move = "idle";
+                            return;
+                        };
+                        this.isMoving = true;
                         this.setNewMove();
-                        this.move = "idle";
-                        return;
-                    };
+                    }
+                    if (this.watch_direction == "back") {
+                        this.y--;
+                        if (this.check_move(this.x, this.y)) {
+                            this.y++;
+                            this.setNewMove();
+                            this.move = "idle";
+                            return;
+                        };
+                        this.isMoving = true;
+                        this.setNewMove();
+                    }
+                    if (this.watch_direction == "right") {
+                        this.x++;
+                        if (this.check_move(this.x, this.y)) {
+                            this.x--;
+                            this.setNewMove();
+                            this.move = "idle";
+                            return;
+                        };
+                        this.isMoving = true;
+                        this.setNewMove();
+                    }
+                    if (this.watch_direction == "left") {
+                        this.x--;
+                        if (this.check_move(this.x, this.y)) {
+                            this.x++;
+                            this.setNewMove();
+                            this.move = "idle";
+                            return;
+                        };
+                        this.isMoving = true;
+                        this.setNewMove();
+                    }
                     this.isMoving = true;
                     this.setNewMove();
                 }
                 if (this.move == "ArrowDown") {
                     this.setLastMove();
-                    this.y++;
-                    if (this.check_move(this.x, this.y)) {
+                    if (this.watch_direction == "front") {
                         this.y--;
+                        if (this.check_move(this.x, this.y)) {
+                            this.y++;
+                            this.setNewMove();
+                            this.move = "idle";
+                            return;
+                        };
+                        this.isMoving = true;
                         this.setNewMove();
-                        this.move = "idle";
-                        return;
-                    };
+                    }
+                    if (this.watch_direction == "back") {
+                        this.y++;
+                        if (this.check_move(this.x, this.y)) {
+                            this.y--;
+                            this.setNewMove();
+                            this.move = "idle";
+                            return;
+                        };
+                        this.isMoving = true;
+                        this.setNewMove();
+                    }
+                    if (this.watch_direction == "right") {
+                        this.x--;
+                        if (this.check_move(this.x, this.y)) {
+                            this.x++;
+                            this.setNewMove();
+                            this.move = "idle";
+                            return;
+                        };
+                        this.isMoving = true;
+                        this.setNewMove();
+                    }
+                    if (this.watch_direction == "left") {
+                        this.x++;
+                        if (this.check_move(this.x, this.y)) {
+                            this.x--;
+                            this.setNewMove();
+                            this.move = "idle";
+                            return;
+                        };
+                        this.isMoving = true;
+                        this.setNewMove();
+                    }
                     this.isMoving = true;
                     this.setNewMove();
                 }

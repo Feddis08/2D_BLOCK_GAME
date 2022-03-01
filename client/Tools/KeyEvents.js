@@ -16,6 +16,11 @@ document.addEventListener("keydown", (evt) => {
             }
         }
     };
+    switch (evt.code) {
+        case "KeyA":
+        case "KeyD":
+            Server.socket.emit("watch_request", { watch_direction: evt.code });
+    }
     if (evt.code !== old_key) {
         old_key = evt.code;
         switch (evt.code) {

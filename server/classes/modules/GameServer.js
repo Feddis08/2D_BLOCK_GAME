@@ -190,10 +190,16 @@ class GameServer {
             }
         })
     }
+    player_watch_direction_set(dataPacket, socketId) {
+        this.players.forEach((player, index) => {
+            if (player.socketId == socketId) {
+                player.set_watch_direction(dataPacket.watch_direction);
+            }
+        })
+    }
     player_move_set(dataPacket, socketId) {
         this.players.forEach((player, index) => {
             if (player.socketId == socketId) {
-                player.set_watch_direction(dataPacket.move);
                 player.move = dataPacket.move;
             }
         })

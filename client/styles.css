@@ -3,8 +3,8 @@
     flex-direction: row;
     position: relative;
     border: solid 10px;
-    height: 768;
-    width: 768;
+    height: 502;
+    width: 502;
     overflow: auto;
 }
 .chatWindow{
