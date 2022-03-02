@@ -6,9 +6,9 @@ const Update_data = require("../modules/update_data.js");
 class Entity {
     isPlayer = false;
     UUID = "";
-    x = 1;
+    x = 250;
     chunk_x = 0;
-    y = 1;
+    y = 250;
     chunk_y = 0;
     coords_changed_by_move = false;
     last_x_y_string = "";

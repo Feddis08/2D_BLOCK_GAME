@@ -112,28 +112,32 @@ class Grid {
 
     }
     */
-    drawGrid() {
+    drawGrid(remove) {
         this.chunks.forEach((chunk_row, chunk_row_index) => {
             chunk_row.forEach((chunk, chunk_column_index) => {
                 chunk.blocks.forEach((blocks, block_row_index) => {
                     blocks.forEach((block, block_column_index) => {
-                        let block3 = this.scene.getObjectByName("ID:x" + block_row_index + "y" + block_column_index);
-                        this.scene.remove(block3);
-                        if (block.block_of == "0") {
-                            block3 = this.createStoneBlock("ID:x" + block_row_index + "y" + block_column_index);
+                        if (remove) {
+                            let block3 = this.scene.getObjectByName("ID: cx" + chunk_row_index + "cy" + chunk_column_index + "x" + block_row_index + "y" + block_column_index);
+                            this.scene.remove(block3);
+                        } else {
+                            let block3;
+                            if (block.block_of == "0") {
+                                block3 = this.createStoneBlock("ID: cx" + chunk_row_index + "cy" + chunk_column_index + "x" + block_row_index + "y" + block_column_index);
+                            }
+                            if (block.block_of == "1") {
+                                block3 = this.createGrassBlock("ID: cx" + chunk_row_index + "cy" + chunk_column_index + "x" + block_row_index + "y" + block_column_index);
+                            }
+                            if (block.block_of == "2") {
+                                block3 = this.createWaterBlock("ID: cx" + chunk_row_index + "cy" + chunk_column_index + "x" + block_row_index + "y" + block_column_index);
+                            }
+                            if (block.block_of == "3") {
+                                block3 = this.createSandBlock("ID: cx" + chunk_row_index + "cy" + chunk_column_index + "x" + block_row_index + "y" + block_column_index);
+                            }
+                            block3.position.z = block3.geometry.parameters.width * block_column_index + (chunk.y * 8 - 8);
+                            block3.position.x = block3.geometry.parameters.depth * block_row_index + (chunk.x * 8 - 8);
+                            this.scene.add(block3);
                         }
-                        if (block.block_of == "1") {
-                            block3 = this.createGrassBlock("ID:x" + block_row_index + "y" + block_column_index);
-                        }
-                        if (block.block_of == "2") {
-                            block3 = this.createWaterBlock("ID:x" + block_row_index + "y" + block_column_index);
-                        }
-                        if (block.block_of == "3") {
-                            block3 = this.createSandBlock("ID:x" + block_row_index + "y" + block_column_index);
-                        }
-                        block3.position.z = block3.geometry.parameters.width * block_column_index;
-                        block3.position.x = block3.geometry.parameters.depth * block_row_index;
-                        this.scene.add(block3);
                     })
                 })
             })
@@ -292,9 +296,5 @@ class Grid {
     animate() {
         this.renderer.render(this.scene, this.camera);
 
-    }
-    update() {
-        this.drawGrid();
-        //this.drawViewport();
     }
 }

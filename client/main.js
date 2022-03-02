@@ -2,10 +2,12 @@ console.log("hello")
 var grid;
 var UUID;
 var images = [
-    "res/Blocks/stone_block.png",
-    "res/Blocks/grass_block.png",
-    "res/Blocks/water_block.png",
-    "res/Blocks/sand_block.png",
+    "res/Blocks/grass_block/but.png",
+    "res/Blocks/grass_block/side.png",
+    "res/Blocks/grass_block/top.png",
+    "res/Blocks/sand_block/side.png",
+    "res/Blocks/stone_block/side.png",
+    "res/Blocks/water_block/side.png",
     "res/Entities/Player/front.png",
     "res/Entities/Player/back.png",
     "res/Entities/Player/right.png",
@@ -44,6 +46,7 @@ const loadPage2 = (href) => {
 
 }
 var Server = {
+    entities: [],
     grid: null,
     socket: "",
     serverAddress: "",
@@ -89,8 +92,10 @@ var Server = {
             }
         })
         this.socket.on("view_update", (dataPacket) => {
+            this.grid.drawGrid(true);
+            display_remove_all_entities();
             this.grid.chunks = dataPacket.viewport;
-            this.grid.update();
+            this.grid.drawGrid(false);
         })
         this.socket.on("self_player_update", (dataPacket) => {
             let entities = [];
@@ -137,9 +142,6 @@ var Server = {
     startGame(dataPacket) {
         document.body.innerHTML = loadPage("MultiPlayer/game.html");
         let name_tag = document.querySelector("#name_tag");
-        let domNodeGrid = document.querySelector("#Grid");
-        domNodeGrid.style.height = (this.block_scale * 8) * dataPacket.player.viewRange;
-        domNodeGrid.style.width = (this.block_scale * 8) * dataPacket.player.viewRange;
         name_tag.innerHTML = "Your name: " + dataPacket.player.name;
         blockSize(this.block_scale);
         this.grid = new Grid(0, 0, 0, dataPacket.player.viewRange, false);

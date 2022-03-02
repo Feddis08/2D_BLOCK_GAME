@@ -35,10 +35,12 @@ class World {
         let c_x = Math.trunc(want_x / 8);
         let c_y = Math.trunc(want_y / 8);
         if (c_x < 0 || c_y < 0) {
-            return false;
+            //return { c_x, c_y };
+            return false
         }
         if (this.chunks.length < c_x || this.chunks.length < c_y) {
-            return false;
+            //return {c_x, c_y };
+            return false
         } else {
             let chunk = this.chunks[c_x][c_y];
             return { chunk, c_x, c_y };

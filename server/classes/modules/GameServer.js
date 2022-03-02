@@ -25,7 +25,7 @@ class GameServer {
                 let player_dataPackets = player.tick();
                 player_dataPackets.forEach((player_dataPacket, index) => {
                     if (player_dataPacket.in_same_chunk) {
-                        this.send_data_to_all_players_in_the_same_chunk(player, player_dataPacket.emit, player_dataPacket);
+                        this.send_data_to_all_players_in_view_range(player, player_dataPacket.emit, player_dataPacket);
                     }
                     if (player_dataPacket.privat_message) {
 
@@ -37,14 +37,15 @@ class GameServer {
                 player.updates = [];
                 if (player.coords_changed_by_move) {
                     player.coords_changed_by_move = false;
-                    this.send_data_to_all_players_in_the_same_chunk(player, "entity_move_update", { player: player.filter_and_get_public_data() });
+                    player.checkViewport();
+                    this.send_data_to_all_players_in_view_range(player, "entity_move_update", { player: player.filter_and_get_public_data() });
                 }
                 if (player.viewChange) {
                     this.remove_player_from_loaded_chunk_by_UUID(player.UUID)
                     this.add_loaded_chunks_by_player(player);
                     this.io.to(player.socketId).emit("view_update", { viewport: player.chunks_to_see });
-                    this.io.to(player.socketId).emit("self_entity_update", { player })
                     player.viewChange = false;
+                    this.io.to(player.socketId).emit("self_entity_update", { player })
                 }
                 if (player.entityViewChange) {
                     player.entityViewChange = false;
@@ -57,11 +58,14 @@ class GameServer {
             }
         })
     };
-    send_data_to_all_players_in_the_same_chunk(player, emit, data) {
-        let chunkData = Data.world.getChunkByBlock(player.x, player.y);
-        chunkData.chunk.entitiesUUIDs.forEach((UUID, index) => {
-            let other_player = this.getEntityByUUID(UUID);
-            this.io.to(other_player.socketId).emit(emit, data);
+    send_data_to_all_players_in_view_range(player, emit, data) {
+        player.chunks_to_see.forEach((chunk_row, _) => {
+            chunk_row.forEach((chunk, _) => {
+                chunk.entitiesUUIDs.forEach((UUID, _) => {
+                    let other_player = this.getEntityByUUID(UUID);
+                    this.io.to(other_player.socketId).emit(emit, data);
+                })
+            })
         })
     }
     playerChat(text, socketId) {
@@ -164,7 +168,10 @@ class GameServer {
             if (player.socketId == socketId) {
                 if (player.setup_finished) {
                     if (dataPacket) player.setup_accepted = true;
+                    player.tick();
+                    player.checkViewport();
                     this.io.emit("infoChat", { message: "[Server]: " + player.name + " joined the server!" });
+                    this.io.to(player.socketId).emit("infoChat", { message: "[Server]: Hey, " + player.name + "! To move: ArrowKeys. To turn right KeyD. To turn left KeyA. This is not the final version!" });
                 }
             }
         })

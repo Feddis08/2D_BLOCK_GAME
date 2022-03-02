@@ -24,7 +24,7 @@ class Grid {
                     })
                     b_row.push(b_collumn);
                 })
-                let chunk = new Chunk(b_row, Math.random().toString());
+                let chunk = new Chunk(b_row, Math.random().toString(), chunk_row, chunk_column);
                 c_column.push(chunk)
             })
             c_row.push(c_column);

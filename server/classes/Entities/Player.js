@@ -6,7 +6,7 @@ class Player extends Entity {
     setup_accepted = false;
     isPlayer = true;
     entityViewChange = false;
-    viewRange = 32;
+    viewRange = 1;
     chunks_to_see = [];
     chunks_string = "";
     entities_to_see = [];
@@ -19,7 +19,6 @@ class Player extends Entity {
         this.isPlayer = true;
     }
     personalTick() {
-        this.checkViewport();
         let entities = this.entities_UUID_string(this.chunks_to_see);
         this.entities_to_see = entities.s_entities;
         if (this.entities_string !== entities.result) {
@@ -68,7 +67,9 @@ class Player extends Entity {
         }
     }
     calculateViewport() {
-        let chunkData = Data.world.getChunkByBlock(this.x, this.y)
+        let x = this.x - ((this.viewRange * 8) / 2);
+        let y = this.y - ((this.viewRange * 8) / 2);
+        let chunkData = Data.world.getChunkByBlock(x, y)
         if (chunkData == false) {
             return false;
         } else {

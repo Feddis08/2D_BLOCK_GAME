@@ -7,13 +7,13 @@ display_entities = (entities) => {
         Server.grid.scene.remove(player);
         player = Server.grid.createPlayer(entity.UUID);
         Server.grid.scene.add(player);
-        player.position.x = coords.x;
+        player.position.x = coords.x + (coords.c_x * 8 - 8);
         player.position.y = 1;
-        player.position.z = coords.y;
+        player.position.z = coords.y + (coords.c_y * 8 - 8);
         if (entity.socketId == Server.socket.id) {
-            Server.grid.camera.position.x = coords.x;
+            Server.grid.camera.position.x = coords.x + (coords.c_x * 8 - 8);
             Server.grid.camera.position.y = 1;
-            Server.grid.camera.position.z = coords.y;
+            Server.grid.camera.position.z = coords.y + (coords.c_y * 8 - 8);
         }
         if (entity.watch_direction == "back") {
             player.rotation.y = Math.PI;
@@ -57,9 +57,12 @@ display_remove_entity = (UUID) => {
     }
 }
 display_remove_all_entities = () => {
-    let entities = Server.grid.chunks[0][0].entitiesUUIDs;
-    entities.forEach((entityUUID, index) => {
-        let entity3 = Server.grid.scene.getObjectByName(entityUUID);
-        Server.grid.scene.remove(entity3);
+    Server.grid.chunks.forEach((chunk_row, _) => {
+        chunk_row.forEach((chunk, _) => {
+            chunk.entitiesUUIDs.forEach((entityUUID, index) => {
+                let entity3 = Server.grid.scene.getObjectByName(entityUUID);
+                Server.grid.scene.remove(entity3);
+            })
+        })
     })
 }
