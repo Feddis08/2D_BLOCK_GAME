@@ -8,6 +8,7 @@ var images = [
     "res/Blocks/sand_block/side.png",
     "res/Blocks/stone_block/side.png",
     "res/Blocks/water_block/side.png",
+    "res/Blocks/slime_block/side.png",
     "res/Entities/Player/front.png",
     "res/Entities/Player/back.png",
     "res/Entities/Player/right.png",

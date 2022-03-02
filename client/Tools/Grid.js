@@ -134,6 +134,9 @@ class Grid {
                             if (block.block_of == "3") {
                                 block3 = this.createSandBlock("ID: cx" + chunk_row_index + "cy" + chunk_column_index + "x" + block_row_index + "y" + block_column_index);
                             }
+                            if (block.block_of == "4") {
+                                block3 = this.createSlimeBlock("ID: cx" + chunk_row_index + "cy" + chunk_column_index + "x" + block_row_index + "y" + block_column_index);
+                            }
                             block3.position.z = block3.geometry.parameters.width * block_column_index + (chunk.y * 8 - 8);
                             block3.position.x = block3.geometry.parameters.depth * block_row_index + (chunk.x * 8 - 8);
                             this.scene.add(block3);
@@ -142,6 +145,36 @@ class Grid {
                 })
             })
         })
+    }
+    createSlimeBlock(id) {
+        let loader = new THREE.TextureLoader();
+        loader.setPath('res/blocks/slime_block/');
+        const textureSlimeBlock = [
+            new THREE.MeshStandardMaterial({
+                map: loader.load("side.png")
+            }),
+            new THREE.MeshStandardMaterial({
+                map: loader.load("side.png")
+            }),
+            new THREE.MeshStandardMaterial({
+                map: loader.load("side.png")
+            }),
+            new THREE.MeshStandardMaterial({
+                map: loader.load("side.png")
+            }),
+            new THREE.MeshStandardMaterial({
+                map: loader.load("side.png")
+            }),
+            new THREE.MeshStandardMaterial({
+                map: loader.load("side.png")
+            })
+        ]
+        let geometry = new THREE.BoxGeometry(1, 1, 1);
+
+        const cube = new THREE.Mesh(geometry, textureSlimeBlock);
+        cube.overdraw = true;
+        cube.name = id;
+        return cube;
     }
     createSandBlock(id) {
         let loader = new THREE.TextureLoader();
